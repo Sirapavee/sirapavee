@@ -3,6 +3,7 @@
 ## About me
 I'm a graduate Computer science student at Chulalongkorn University.
 
+<!--
 ## Technical Skills
 
 Design
@@ -51,6 +52,7 @@ Version Control
 
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+-->
 
 <!--
 **Sirapavee/sirapavee** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
