@@ -1,0 +1,12 @@
+/* foundation */
+@import "tailwindcss";
+@import "./theme.css";
+
+/* baseline */
+@import "./base/foundation.css";
+
+/* components */
+@import "./components/typography.css";
+
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
