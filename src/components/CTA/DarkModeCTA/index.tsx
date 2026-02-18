@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-import { getLocalStorage, setLocalStorage } from '@/app/utils/cookie';
+import { getLocalStorage, setLocalStorage } from '@/utils/cookie';
 
 export const DarkModeCTA = () => {
-  const [currentMode, setCurrentMode] = useState(getLocalStorage('theme') || 'dark');
+  const [currentMode, setCurrentMode] = useState(getLocalStorage('theme') ?? 'dark');
 
   const updateTheme = () => {
     const theme = getLocalStorage('theme');
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme = !!theme && theme === 'light' ? 'dark' : 'light';
 
     setLocalStorage('theme', newTheme);
     setCurrentMode(newTheme);

@@ -1,10 +1,10 @@
 import { Pridi } from 'next/font/google';
 
-import { cn } from './utils/className';
+import { cn } from '../utils/className';
 
 import '@styles/global.css';
 
-import { DarkModeCTA } from '@/components/DarkModeCTA';
+import { DarkModeCTA } from '@/components/CTA';
 import { NavBar } from '@/components/NavBar';
 
 const pridi = Pridi({
@@ -12,6 +12,14 @@ const pridi = Pridi({
   variable: '--font-pridi',
   weight: ['400', '500', '600', '700'],
 });
+
+export const metadata = {
+  title: 'Home',
+  description: 'Portfolio of Sirapavee Ganyaporngul, a Frontend Developer',
+  icons: {
+    icon: './logo.svg',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -29,7 +37,7 @@ export default function RootLayout({
         )}
       >
         <NavBar />
-        {children}
+        <div className='h-dvh w-dvw'>{children}</div>
         <DarkModeCTA />
       </body>
     </html>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const NavBar = () => {
   return (
-    <nav className='fixed top-0 z-99 w-dvw'>
+    <nav className='fixed top-0 z-99 h-20 w-dvw'>
       <div className='flex items-center justify-between pr-10'>
         <div className='flex items-center gap-4'>
           <Link href='/'>
