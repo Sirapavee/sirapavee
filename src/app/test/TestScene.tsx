@@ -14,7 +14,7 @@ import { Mesh, PointLight, PointLightHelper, Scene } from 'three';
 
 const Box = () => {
   const meshRef = useRef<Mesh>(null);
-  const lightRef = useRef<PointLight>(null);
+  const lightRef = useRef<PointLight>(null!);
 
   const { color, width, height, depth } = useControls('Box', {
     color: '#00ffff',
@@ -23,7 +23,7 @@ const Box = () => {
     depth: { value: 1, min: 0.5, max: 3, step: 0.1 },
   });
 
-  const boxLengthRef = useRef<number>(1);
+  // const boxLengthRef = useRef<number>(1);
 
   useFrame(() => {
     if (meshRef.current) {
