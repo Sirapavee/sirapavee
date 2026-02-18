@@ -1,0 +1,26 @@
+{
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "htmlWhitespaceSensitivity": "css",
+  "insertPragma": false,
+  "singleAttributePerLine": false,
+  "bracketSameLine": false,
+  "jsxSingleQuote": true,
+  "printWidth": 90,
+  "proseWrap": "preserve",
+  "quoteProps": "consistent",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "options": {
+        "singleQuote": true
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}

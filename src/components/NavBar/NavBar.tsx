@@ -1,19 +1,31 @@
-import { FC } from "react";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
-type NavBarProps = {
-  id?: string;
-};
-
-export const NavBar: FC<NavBarProps> = ({ id }) => {
+export const NavBar = () => {
   return (
-    <nav>
-      <div className="flex justify-between">
-        <div>Logo</div>
-        <div className="flex gap-4">
-          <Link href="/experience">Experience</Link>
-          <Link href="/about">About</Link>
-          <Link href="/contact">Contact</Link>
+    <nav className='fixed top-0 z-99 w-dvw'>
+      <div className='flex items-center justify-between pr-10'>
+        <div className='flex items-center gap-4'>
+          <Link href='/'>
+            <Image src='/logo.svg' alt='Logo' width={80} height={80} />
+          </Link>
+          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/test'>
+            Test
+          </Link>
+        </div>
+        <div className='flex gap-4'>
+          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/about'>
+            About
+          </Link>
+          <Link
+            className='text-light-gray-200 dark:text-dark-gray-200'
+            href='/experience'
+          >
+            Experience
+          </Link>
+          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/contact'>
+            Contact
+          </Link>
         </div>
       </div>
     </nav>
