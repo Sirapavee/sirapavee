@@ -48,13 +48,13 @@ export const LandingPage = () => {
     <div className='relative flex size-full flex-col items-center justify-center gap-4'>
       <animated.h1
         style={headerSpring}
-        className='text-light-gray-300 typo-headline-1 dark:text-dark-gray-100 text-center text-4xl font-bold md:text-6xl'
+        className='text-light-gray-300 typo-headline-1 dark:text-dark-gray-100 text-center text-5xl font-bold md:text-6xl'
       >
         I&apos;m Sirapavee Ganyaporngul
       </animated.h1>
       <animated.span
         style={subHeaderSpring}
-        className='text-light-gray-200 typo-headline-2 dark:text-dark-gray-200 text-lg font-semibold md:text-2xl'
+        className='text-light-gray-200 typo-headline-2 dark:text-dark-gray-200 text-2xl font-semibold'
       >
         A Frontend Developer
       </animated.span>
