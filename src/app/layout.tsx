@@ -1,4 +1,5 @@
 import { Pridi } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 import { cn } from '../utils/className';
 
@@ -21,15 +22,15 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const localStorage = typeof window !== 'undefined' ? window.localStorage : null;
+  const theme = (await cookies()).get('theme')?.value ?? 'dark;';
 
   return (
-    <html lang='en' data-theme={localStorage?.getItem('theme') ?? 'dark'}>
+    <html lang='en' data-theme={theme}>
       <body
         className={cn(
           'bg-light-blue-100 dark:bg-dark-black-200 antialiased',
@@ -38,7 +39,7 @@ export default function RootLayout({
       >
         <NavBar />
         <div className='h-dvh w-dvw'>{children}</div>
-        <DarkModeCTA />
+        <DarkModeCTA ssrTheme={theme} />
       </body>
     </html>
   );
