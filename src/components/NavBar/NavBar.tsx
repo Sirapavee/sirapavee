@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { themeSubHeader } from '@/const/tailwindClass';
+
 export const NavBar = () => {
   return (
     <nav className='fixed top-0 z-99 h-20 w-dvw'>
@@ -9,21 +11,18 @@ export const NavBar = () => {
           <Link href='/'>
             <Image src='/logo.svg' alt='Logo' width={80} height={80} />
           </Link>
-          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/test'>
+          <Link className={themeSubHeader} href='/test'>
             Test
           </Link>
         </div>
         <div className='flex gap-4'>
-          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/about'>
+          <Link className={themeSubHeader} href='/about'>
             About
           </Link>
-          <Link
-            className='text-light-gray-200 dark:text-dark-gray-200'
-            href='/experience'
-          >
+          <Link className={themeSubHeader} href='/experience'>
             Experience
           </Link>
-          <Link className='text-light-gray-200 dark:text-dark-gray-200' href='/contact'>
+          <Link className={themeSubHeader} href='/contact'>
             Contact
           </Link>
         </div>
