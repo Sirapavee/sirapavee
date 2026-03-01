@@ -1,7 +1,8 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import Cookie from 'js-cookie';
+import { getCookie, setCookie } from 'cookies-next';
+import dayjs from 'dayjs';
 
 import { themeBgReverse } from '@/const/tailwindClass';
 import { cn } from '@/utils/className';
@@ -14,14 +15,14 @@ export const DarkModeCTA: FC<DarkModeCTAProps> = ({ ssrTheme }) => {
   const [currentMode, setCurrentMode] = useState(ssrTheme);
 
   const updateTheme = () => {
-    const theme = Cookie.get('theme');
+    const theme = getCookie('theme');
 
     const toggledTheme = theme === 'light' ? 'dark' : 'light';
     const newTheme = !theme ? 'dark' : toggledTheme;
 
     // NOTE: set cookie to expire in 365 days
-    Cookie.set('theme', newTheme, {
-      expires: 365,
+    setCookie('theme', newTheme, {
+      expires: dayjs().add(365, 'day').toDate(),
     });
     setCurrentMode(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
@@ -32,7 +33,7 @@ export const DarkModeCTA: FC<DarkModeCTAProps> = ({ ssrTheme }) => {
   }, [currentMode]);
 
   return (
-    <div className='absolute right-3 bottom-3 flex cursor-pointer items-center justify-center'>
+    <div className='absolute bottom-3 left-3 z-2 flex cursor-pointer items-center justify-center'>
       <button
         role='button'
         className={cn(

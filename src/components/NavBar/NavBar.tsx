@@ -22,9 +22,6 @@ export const NavBar = () => {
           <Link className={themeSubHeader} href='/experience'>
             Experience
           </Link>
-          <Link className={themeSubHeader} href='/contact'>
-            Contact
-          </Link>
         </div>
       </div>
     </nav>

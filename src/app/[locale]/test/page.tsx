@@ -6,9 +6,6 @@ export const metadata = {
 };
 
 export default function TestPage() {
-  // const OrbitControl = new OrbitControls();
-  // extend({ OrbitControl });
-
   return (
     <div className='flex h-dvh w-dvw'>
       <TestScene />
