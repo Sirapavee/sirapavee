@@ -3,7 +3,7 @@
 // import { cookies } from 'next/headers';
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 
 import { themeHeader } from '@/const/tailwindClass';
 import { useTransitionContext } from '@/providers/TransitionProvider';

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, FC, ReactNode, useContext, useState } from 'react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 
 type TransitionContextProps = {
   timeline: gsap.core.Timeline;

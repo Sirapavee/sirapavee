@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 
 import { LandingPage } from '@/components/LandingPage';
 import { INITIAL_SPACE_CONFIG_PROPS, SpaceScene } from '@/components/Scene';
