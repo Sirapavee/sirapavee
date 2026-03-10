@@ -9,6 +9,8 @@ import { themeHeader } from '@/const/tailwindClass';
 import { useTransitionContext } from '@/providers/TransitionProvider';
 import { cn } from '@/utils/className';
 
+gsap.registerPlugin(useGSAP);
+
 // import { createClient } from '@/utils/supabase/server';
 
 export default function ExperiencePage() {

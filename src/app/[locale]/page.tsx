@@ -9,6 +9,8 @@ import { INITIAL_SPACE_CONFIG_PROPS, SpaceScene } from '@/components/Scene';
 import { useTransitionContext } from '@/providers/TransitionProvider';
 import { ConfigProps } from '@/types/scene';
 
+gsap.registerPlugin(useGSAP);
+
 export default function Home() {
   const container = useRef<HTMLDivElement>(null);
   const { timeline } = useTransitionContext();
