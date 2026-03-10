@@ -8,18 +8,21 @@ export const NavBar = () => {
     <nav className='fixed top-0 z-99 h-20 w-dvw'>
       <div className='flex items-center justify-between pr-10'>
         <div className='flex items-center gap-4'>
-          <Link href='/'>
+          <Link scroll={false} href='/'>
             <Image src='/logo.svg' alt='Logo' width={80} height={80} />
           </Link>
-          <Link className={themeSubHeader} href='/test'>
+          <Link scroll={false} className={themeSubHeader} href='/test'>
             Test
+          </Link>
+          <Link scroll={false} className={themeSubHeader} href='/shatter'>
+            Shatter
           </Link>
         </div>
         <div className='flex gap-4'>
-          <Link className={themeSubHeader} href='/about'>
+          {/* <Link scroll={false} className={themeSubHeader} href='/about'>
             About
-          </Link>
-          <Link className={themeSubHeader} href='/experience'>
+          </Link> */}
+          <Link scroll={false} className={themeSubHeader} href='/experience'>
             Experience
           </Link>
         </div>

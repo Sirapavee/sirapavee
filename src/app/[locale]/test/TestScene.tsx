@@ -1,9 +1,18 @@
 'use client';
 
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { Instance, Instances, OrbitControls, Torus, useHelper } from '@react-three/drei';
+import { FC, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import {
+  Instance,
+  Instances,
+  Mask,
+  OrbitControls,
+  Torus,
+  useHelper,
+  useMask,
+  useProgress,
+} from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useReactiveGetCookie } from 'cookies-next';
+import { getCookie, useReactiveGetCookie } from 'cookies-next';
 import { useControls } from 'leva';
 import {
   Group,
@@ -18,6 +27,8 @@ import {
 } from 'three';
 
 import { themeBgReverse, themeSubHeader } from '@/const/tailwindClass';
+import { useStateContext } from '@/providers/StateProvider';
+import { themeInitialState, themeReducer } from '@/stores/reducers/themeReducer';
 import { cn } from '@/utils/className';
 
 type PlanetProps = {
@@ -262,23 +273,22 @@ type SpaceProps = {
   configProps: ConfigProps;
 };
 const Space: FC<SpaceProps> = ({ configProps }) => {
-  const [themedColor, setThemeColor] = useState<string>('white');
+  const progress = useProgress();
 
-  const getCookie = useReactiveGetCookie();
-  const theme = getCookie('theme');
-
-  useEffect(() => {
-    setThemeColor(theme === 'dark' ? 'white' : 'black');
-  }, [theme]);
+  console.log({
+    progress,
+  });
 
   return (
     <>
       <Instances
         limit={1000}
         // range={1000}
-        geometry={new SphereGeometry(0.1, 16, 16)}
-        material={new PointsMaterial({ color: themedColor })}
+        // geometry={new SphereGeometry(0.1, 16, 16)}
+        // material={new PointsMaterial({ color: 'white' })}
       >
+        <sphereGeometry args={[0.1, 16, 16]} />
+        <pointsMaterial color='white' />
         {Array.from(
           {
             length: 1000,
@@ -325,7 +335,7 @@ export const TestScene = () => {
     mode: 'idle',
   });
 
-  const [isFinsihJump, setIsFinishJump] = useState<boolean>(false);
+  const [isFinishJump, setIsFinishJump] = useState<boolean>(false);
 
   return (
     <div className='flex h-dvh w-dvw'>
@@ -437,7 +447,7 @@ export const TestScene = () => {
         scene={scene}
       >
         <Space configProps={configProps} />
-        {isFinsihJump && <Planet configProps={configProps} />}
+        {isFinishJump && <Planet configProps={configProps} />}
 
         {/* <Light /> */}
         <Camera />

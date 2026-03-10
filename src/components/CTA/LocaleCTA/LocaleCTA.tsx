@@ -19,7 +19,7 @@ export const LocaleCTA = () => {
     return splittedPathname.join('/');
   };
 
-  const [menuSpring, api] = useSpring(() => ({
+  const menuSpring = useSpring({
     from: {
       width: 0,
       opacity: 0,
@@ -38,40 +38,23 @@ export const LocaleCTA = () => {
         opacity: 1,
       },
     ],
-  }));
+  });
 
   const getFlag = () => {
     switch (locale) {
       case 'fr':
-        return (
-          <button className='cursor-pointer rounded-4xl' type='button'>
-            <FR title='fr' width={24} height={24} />
-          </button>
-        );
+        return <FR title='fr' width={24} height={24} />;
       case 'de':
-        return (
-          <button className='cursor-pointer rounded-4xl' type='button'>
-            <DE title='de' width={24} height={24} />
-          </button>
-        );
+        return <DE title='de' width={24} height={24} />;
       case 'en':
       default:
-        return (
-          <button
-            className='cursor-pointer rounded-4xl'
-            onMouseOver={() => {
-              api.start();
-            }}
-          >
-            <US title='en-us' width={24} height={24} />
-          </button>
-        );
+        return <US title='en-us' width={24} height={24} />;
     }
   };
 
   return (
     <div className='flex flex-row-reverse items-center gap-4'>
-      {getFlag()}
+      <button className='cursor-pointer rounded-4xl'>{getFlag()}</button>
       <animated.div style={menuSpring} className='flex items-center gap-4'>
         <Link href={getNewPathname('en')} className='rounded-4xl'>
           <US title='en-us' width={24} height={24} />

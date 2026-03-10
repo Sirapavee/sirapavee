@@ -5,6 +5,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 
 import { themeBgReverse } from '@/const/tailwindClass';
+import { useStateContext } from '@/providers/StateProvider';
 import { cn } from '@/utils/className';
 
 type DarkModeCTAProps = {
@@ -13,6 +14,7 @@ type DarkModeCTAProps = {
 
 export const DarkModeCTA: FC<DarkModeCTAProps> = ({ ssrTheme }) => {
   const [currentMode, setCurrentMode] = useState(ssrTheme);
+  const { dispatch } = useStateContext();
 
   const updateTheme = () => {
     const theme = getCookie('theme');
@@ -30,10 +32,11 @@ export const DarkModeCTA: FC<DarkModeCTAProps> = ({ ssrTheme }) => {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', currentMode);
-  }, [currentMode]);
+    dispatch({ type: 'set_theme', payload: currentMode });
+  }, [currentMode, dispatch]);
 
   return (
-    <div className='absolute bottom-3 left-3 z-2 flex cursor-pointer items-center justify-center'>
+    <div className='absolute bottom-3 left-3 z-11 flex cursor-pointer items-center justify-center'>
       <button
         role='button'
         className={cn(

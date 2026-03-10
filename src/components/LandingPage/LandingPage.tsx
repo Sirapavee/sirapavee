@@ -1,6 +1,8 @@
 'use client';
 
+import { useMemo } from 'react';
 import { animated, useSpring } from '@react-spring/web';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { themeHeader, themeSubHeader } from '@/const/tailwindClass';
@@ -8,6 +10,9 @@ import { cn } from '@/utils/className';
 
 export const LandingPage = () => {
   const t = useTranslations('home');
+  const pathname = usePathname();
+
+  const locale = useMemo(() => pathname.split('/')[1], [pathname]);
 
   const greetingSpring = useSpring({
     from: {
@@ -24,6 +29,7 @@ export const LandingPage = () => {
         scale: 1,
       },
     ],
+    delay: 8800,
   });
 
   const headerSpring = useSpring({
@@ -41,7 +47,7 @@ export const LandingPage = () => {
         scale: 1,
       },
     ],
-    delay: 500,
+    delay: 9300,
   });
 
   const subHeaderSpring = useSpring({
@@ -53,7 +59,7 @@ export const LandingPage = () => {
       opacity: 1,
       scale: 1,
     },
-    delay: 1000,
+    delay: 9800,
   });
 
   const copyrightSpring = useSpring({
@@ -65,7 +71,7 @@ export const LandingPage = () => {
       opacity: 1,
       y: 0,
     },
-    delay: 1000,
+    delay: 9800,
   });
 
   return (
@@ -75,6 +81,9 @@ export const LandingPage = () => {
         className={cn(
           'typo-headline-1 text-center text-5xl font-bold md:text-6xl',
           themeHeader,
+          {
+            'text-4xl md:text-5xl': locale === 'fr',
+          },
         )}
       >
         {t('greet')}
@@ -84,6 +93,9 @@ export const LandingPage = () => {
         className={cn(
           'typo-headline-1 text-center text-5xl font-bold md:text-6xl',
           themeHeader,
+          {
+            'text-4xl md:text-5xl': locale === 'fr',
+          },
         )}
       >
         {t('introduction')}

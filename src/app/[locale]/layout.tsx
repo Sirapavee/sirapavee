@@ -1,18 +1,19 @@
 import { CookiesNextProvider } from 'cookies-next';
 import { Pridi } from 'next/font/google';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 
-import { cn } from '../../utils/className';
 import notFound from './not-found';
 
 import '@styles/global.css';
 
-import { DarkModeCTA } from '@/components/CTA';
-import { Footer } from '@/components/Footer';
-import { NavBar } from '@/components/NavBar';
+import { Layout } from '@/components/shared/Layout/Layout';
+import { Transition } from '@/components/Transition/Transition';
 import { themeBg } from '@/const/tailwindClass';
 import { routing } from '@/i18n/routing';
+import { StateProvider } from '@/providers/StateProvider';
+import { TransitionProvider } from '@/providers/TransitionProvider';
+import { cn } from '@/utils/className';
 
 const pridi = Pridi({
   subsets: ['latin'],
@@ -35,8 +36,11 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
+  const headerList = headers();
+  const ssrPathname = (await headerList).get('x-ssr-pathname');
+
   const store = await cookies();
-  const theme = store.get('theme')?.value ?? 'light;';
+  const theme = store.get('theme')?.value ?? 'light';
 
   const { locale } = await params;
 
@@ -52,6 +56,8 @@ export default async function RootLayout({
       'transition between page': 'space warp',
       'about': 'floating astronaut with speech bubble said "Learn more about me!"',
     },
+    swapDarkmode: 'star supernova explosion -> light mode, black hole -> dark mode',
+    ssrPathname,
   });
 
   return (
@@ -59,10 +65,13 @@ export default async function RootLayout({
       <body className={cn('antialiased', pridi.variable, themeBg)}>
         <NextIntlClientProvider>
           <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 0 }}>
-            <NavBar />
-            <div className='h-dvh w-dvw'>{children}</div>
-            <DarkModeCTA ssrTheme={theme} />
-            <Footer />
+            <StateProvider>
+              <TransitionProvider>
+                <Transition key={ssrPathname ?? ''}>
+                  <Layout theme={theme}>{children}</Layout>
+                </Transition>
+              </TransitionProvider>
+            </StateProvider>
           </CookiesNextProvider>
         </NextIntlClientProvider>
       </body>

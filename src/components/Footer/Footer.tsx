@@ -7,7 +7,7 @@ import { cn } from '@/utils/className';
 
 export const Footer = () => {
   return (
-    <div className='fixed bottom-0 flex h-fit w-dvw items-center justify-end p-3'>
+    <div className='fixed bottom-0 z-10 flex h-fit w-dvw items-center justify-end p-3'>
       <div className={cn('flex items-center gap-3', themeSubHeader)}>
         <LocaleCTA />
         <Link href='https://linkedin.com/in/sirapavee-g' target='_blank'>
