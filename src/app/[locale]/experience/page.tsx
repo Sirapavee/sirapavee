@@ -5,6 +5,8 @@ import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 
+import { BlackHoleScene } from '@/components/Scene/BlackHoleScene';
+import SpiralPlanet from '@/components/Scene/SpiralFlyByPlanetScene/SpiralFlyByPlanetScene';
 import { themeHeader } from '@/const/tailwindClass';
 import { useTransitionContext } from '@/providers/TransitionProvider';
 import { cn } from '@/utils/className';
@@ -46,8 +48,25 @@ export default function ExperiencePage() {
   );
 
   return (
-    <div ref={container} className='flex h-dvh w-dvw items-center justify-center'>
-      <span className={cn('typo-headline-1', themeHeader)}>Experience Page</span>
-    </div>
+    // <div ref={container} className='flex h-dvh w-dvw items-center justify-center'>
+    //   <span className={cn('typo-headline-1', themeHeader)}>Experience Page</span>
+    // </div>
+    // <SpiralPlanet />
+    <BlackHoleScene />
+
+    // <Starfield
+    //   ref={probeRef}
+    //   // ---- per-breakpoint props (mobile-first fallback) ----
+    //   starCount={1000}
+    //   twinkleAmp={0.4}
+    //   panelPosition={'top-right'}
+    //   // ---- single values (apply at every breakpoint) ----
+    //   initialThrottle={0.2}
+    //   onPhaseChange={(phase) => {
+    //     // console.log('warp phase →', phase);
+    //   }}
+    // />
+
+    // <StarfieldProbe />
   );
 }

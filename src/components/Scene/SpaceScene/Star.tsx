@@ -1,31 +1,30 @@
 'use client';
 
-import { FC, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Instance } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { MathUtils, Mesh } from 'three';
 
-type ConfigProps = {
-  configValue: {
-    [key: string]: number;
-  };
-  mode: 'start' | 'cleaning' | 'stop' | 'idle';
-};
+import { getStarRandomHexColor } from './utils';
 
-type StarProps = {
-  configProps: ConfigProps;
-  idx: number;
-};
+import { useStateContext } from '@/providers/StateProvider';
 
-export const Star: FC<StarProps> = ({ configProps }) => {
+export const Star = () => {
+  const { state } = useStateContext();
+
+  const { ref } = state;
+  const { spaceConfigRef } = ref;
+
   const starRef = useRef<Mesh>(null);
-  const zDiffPosRef = useRef<number>(configProps.configValue['position.z']);
-  const zDiffScaleRef = useRef<number>(configProps.configValue['scale.z']);
+  const zDiffPosRef = useRef<number>(1);
+  const zDiffScaleRef = useRef<number>(0.5);
 
   useEffect(() => {
-    zDiffPosRef.current = configProps.configValue['position.z'];
-    zDiffScaleRef.current = configProps.configValue['scale.z'];
-  }, [configProps.configValue]);
+    if (spaceConfigRef.current) {
+      zDiffPosRef.current = spaceConfigRef.current.configValue['position.z'];
+      zDiffScaleRef.current = spaceConfigRef.current.configValue['scale.z'];
+    }
+  }, [spaceConfigRef]);
 
   const defaultPositionX = MathUtils.randFloatSpread(100);
   const defaultPositionY = MathUtils.randFloatSpread(100);
@@ -38,8 +37,8 @@ export const Star: FC<StarProps> = ({ configProps }) => {
   };
 
   useFrame(() => {
-    if (starRef.current) {
-      if (configProps.mode === 'idle') {
+    if (starRef.current && spaceConfigRef.current) {
+      if (spaceConfigRef.current.mode === 'idle') {
         starRef.current.position.z += 0.1;
       }
 
@@ -59,14 +58,17 @@ export const Star: FC<StarProps> = ({ configProps }) => {
         starRef.current.scale.set(1, 1, 1);
       }
 
-      if (configProps.mode === 'start') {
-        starRef.current.scale.z += configProps.configValue['scale.z'];
-
+      if (spaceConfigRef.current.mode === 'start') {
+        starRef.current.scale.z += spaceConfigRef.current.configValue['scale.z'];
         starRef.current.position.z += 0;
+
         setTimeout(() => {
-          starRef.current!.position.z += configProps.configValue['position.z'];
+          if (starRef.current && spaceConfigRef.current) {
+            starRef.current.position.z +=
+              spaceConfigRef.current.configValue['position.z'];
+          }
         }, 1000);
-      } else if (configProps.mode === 'cleaning') {
+      } else if (spaceConfigRef.current.mode === 'cleaning') {
         while (zDiffPosRef.current > 0.1) {
           starRef.current.position.z += zDiffPosRef.current;
           zDiffPosRef.current -= 0.1;
@@ -76,27 +78,13 @@ export const Star: FC<StarProps> = ({ configProps }) => {
           starRef.current.scale.z += zDiffScaleRef.current;
           zDiffScaleRef.current -= 0.01;
         }
-
-        // starRef.current.position.z += 0.1;
-      } else if (configProps.mode === 'stop') {
+      } else if (spaceConfigRef.current.mode === 'stop') {
         starRef.current.position.z += 0;
       }
     }
   });
 
-  const availableColors = [
-    0x009dff, // Example color 1
-    0x001aff, // Example color 2
-    0x4000ff, // Example color 3
-    0x7300ff, // Example color 4
-  ];
-
-  const predefinedStarColorList = [0x4a6b90, 0x8fc5c1, 0xe6ffed, 0x967098, 0xffd7d7];
-
-  const randomIndex = Math.floor(
-    MathUtils.randFloat(0, predefinedStarColorList.length - 1),
-  );
-  const randomColorHex = predefinedStarColorList[randomIndex];
+  const randomColorHex = getStarRandomHexColor();
 
   return (
     <group>

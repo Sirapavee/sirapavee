@@ -1,12 +1,19 @@
 'use client';
 
-import React, { createContext, ReactNode, useContext, useMemo, useReducer } from 'react';
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useContext,
+  useMemo,
+  useReducer,
+} from 'react';
 
 import { initialState, store } from '@/stores';
 import { TRootActions, TRootState } from '@/types/reducer-context';
 
 const StateContext = createContext<
-  { state: TRootState; dispatch: React.Dispatch<TRootActions> } | undefined
+  { state: TRootState; dispatch: Dispatch<TRootActions> } | undefined
 >(undefined);
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {

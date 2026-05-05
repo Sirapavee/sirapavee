@@ -1,11 +1,13 @@
 'use client';
 
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, Ref, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Circle,
   Instance,
   Instances,
   OrbitControls,
   Plane,
+  Sphere,
   Torus,
   useHelper,
   useProgress,
@@ -15,6 +17,8 @@ import { useReactiveGetCookie } from 'cookies-next';
 import { useControls } from 'leva';
 import {
   Color,
+  DirectionalLight,
+  DirectionalLightHelper,
   Group,
   MathUtils,
   Mesh,
@@ -38,7 +42,7 @@ const Camera = () => {
   return (
     <perspectiveCamera
       ref={perspectiveCameraRef}
-      position={[-6, 7, 7]}
+      position={[0, 0, 0]}
       fov={100}
       near={0.1}
       far={500}
@@ -47,63 +51,98 @@ const Camera = () => {
 };
 
 const Light = () => {
-  const lightRef = useRef<PointLight>(null!);
-  useHelper(lightRef, PointLightHelper, 0.5, 'hotpink');
+  const lightRef = useRef<DirectionalLight>(null!);
+  useHelper(lightRef, DirectionalLightHelper, 0.5, 'hotpink');
 
-  return <pointLight ref={lightRef} intensity={100} color='white' position={[2, 1, 3]} />;
+  return (
+    <directionalLight ref={lightRef} intensity={100} color='white' position={[0, 0, 0]} />
+  );
 };
 
 const Object = () => {
   const meshRef = useRef<Mesh>(null);
   const materialRef = useRef<PointsMaterial>(null);
-  const planeMaterialRef = useRef<PointsMaterial>(null);
+  // const planeMaterialRef = useRef<PointsMaterial>(null);
 
-  console.log(window.innerWidth);
+  const starModeRef = useRef<'idle' | 'start' | 'enlarge' | 'supernova' | 'complete'>(
+    'idle',
+  );
 
   useFrame(() => {
-    if (meshRef.current && materialRef.current && planeMaterialRef.current) {
-      if (meshRef.current.scale.z > 10) {
-        meshRef.current.scale.x = 10;
-        meshRef.current.scale.y = 10;
-        meshRef.current.scale.z = 10;
+    if (meshRef.current && materialRef.current) {
+      if (materialRef.current.opacity < 1) {
+        materialRef.current.opacity += 0.1;
+      } else if (materialRef.current.opacity >= 1 && starModeRef.current === 'idle') {
+        starModeRef.current = 'start';
+      }
+
+      if (
+        materialRef.current.opacity > 1 &&
+        meshRef.current.scale.z >= 0 &&
+        starModeRef.current === 'enlarge'
+      ) {
+        meshRef.current.scale.x -= 0.5;
+        meshRef.current.scale.y -= 0.5;
+        meshRef.current.scale.z -= 0.5;
+      } else if (
+        materialRef.current.opacity > 1 &&
+        meshRef.current.scale.z <= 0 &&
+        starModeRef.current === 'enlarge'
+      ) {
+        starModeRef.current = 'supernova';
+      }
+
+      if (meshRef.current.scale.z < 3 && starModeRef.current === 'start') {
+        meshRef.current.scale.x += 0.01;
+        meshRef.current.scale.y += 0.01;
+        meshRef.current.scale.z += 0.01;
+
+        // starModeRef.current = 'enlarge';
+      } else if (meshRef.current.scale.z >= 3 && starModeRef.current === 'start') {
+        starModeRef.current = 'enlarge';
+      }
+
+      if (starModeRef.current === 'supernova' && meshRef.current.scale.z !== 0) {
+        meshRef.current.scale.set(0, 0, 0);
+      } else if (starModeRef.current === 'supernova' && meshRef.current.scale.z === 0) {
+        starModeRef.current = 'complete';
+      }
+
+      if (starModeRef.current === 'complete') {
+        setTimeout(() => {
+          if (meshRef.current) {
+            meshRef.current.scale.x += 0.5;
+            meshRef.current.scale.y += 0.5;
+            meshRef.current.scale.z += 0.5;
+          }
+        }, 1000);
 
         // materialRef.current.color.set('cyan');
-        materialRef.current.transparent = true;
-        materialRef.current.opacity -= 0.03;
-
-        planeMaterialRef.current.transparent = true;
-        planeMaterialRef.current.opacity -= 0.02;
-      } else {
-        meshRef.current.scale.x += 0.05;
-        meshRef.current.scale.y += 0.05;
-        meshRef.current.scale.z += 0.05;
+        // materialRef.current.transparent = true;
+        // materialRef.current.opacity -= 0.03;
+        // planeMaterialRef.current.transparent = true;
+        // planeMaterialRef.current.opacity -= 0.02;
       }
     }
-  });
 
-  console.log(new Color('#16161a'));
+    // console.log({
+    //   mode: starModeRef.current,
+    //   opacity: materialRef.current?.opacity,
+    //   scale: meshRef.current?.scale,
+    // });
+  });
 
   return (
     <group>
-      <Plane args={[100, 100]}>
-        <pointsMaterial
-          ref={planeMaterialRef}
-          attach='material'
-          color={new Color().setHex(0x16161a)}
-          transparent
-          opacity={1}
-        />
-      </Plane>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        <circleGeometry args={[1, 256]} />
-        <pointsMaterial ref={materialRef} color='white' transparent opacity={1} />
-      </mesh>
+      <Circle ref={meshRef} args={[1, 64, 64]}>
+        <pointsMaterial ref={materialRef} color='white' transparent opacity={0} />
+      </Circle>
     </group>
   );
 };
 
 type ShatterSceneProps = {
-  ref?: React.Ref<HTMLDivElement>;
+  ref?: Ref<HTMLDivElement>;
 };
 
 export const ShatterScene: FC<ShatterSceneProps> = ({ ref }) => {
@@ -228,7 +267,7 @@ export const ShatterScene: FC<ShatterSceneProps> = ({ ref }) => {
         fallback={<div>Sorry no WebGL supported!</div>}
         scene={scene}
       >
-        {/* <Light /> */}
+        <Light />
         <Object />
         <Camera />
       </Canvas>

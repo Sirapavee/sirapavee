@@ -10,20 +10,20 @@ gsap.registerPlugin(useGSAP);
 
 type TransitionProps = {
   children: ReactNode;
-  key: string;
+  id: string;
 };
 
-export const Transition: FC<TransitionProps> = ({ children, key }) => {
+export const Transition: FC<TransitionProps> = ({ children, id }) => {
   const [displayChildren, setDisplayChildren] = useState<ReactNode>(children);
-  const [currentChildrenKey, setCurrentChildrenKey] = useState<string>(key);
+  const [currentChildrenId, setCurrentChildrenId] = useState<string>(id);
 
   const { timeline } = useTransitionContext();
 
   useGSAP(() => {
-    if (key !== currentChildrenKey) {
+    if (id !== currentChildrenId) {
       timeline.play().then(() => {
         setDisplayChildren(children);
-        setCurrentChildrenKey(key);
+        setCurrentChildrenId(id);
 
         window.scrollTo(0, 0);
         timeline.pause().clear();

@@ -1,6 +1,7 @@
+import { ReactNode } from 'react';
 import { CookiesNextProvider } from 'cookies-next';
 import { Pridi } from 'next/font/google';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 
 import notFound from './not-found';
@@ -8,7 +9,6 @@ import notFound from './not-found';
 import '@styles/global.css';
 
 import { Layout } from '@/components/shared/Layout/Layout';
-import { Transition } from '@/components/Transition/Transition';
 import { themeBg } from '@/const/tailwindClass';
 import { routing } from '@/i18n/routing';
 import { StateProvider } from '@/providers/StateProvider';
@@ -33,12 +33,9 @@ export default async function RootLayout({
   children,
   params,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  const headerList = headers();
-  const ssrPathname = (await headerList).get('x-ssr-pathname');
-
   const store = await cookies();
   const theme = store.get('theme')?.value ?? 'light';
 
@@ -57,7 +54,6 @@ export default async function RootLayout({
       'about': 'floating astronaut with speech bubble said "Learn more about me!"',
     },
     swapDarkmode: 'star supernova explosion -> light mode, black hole -> dark mode',
-    ssrPathname,
   });
 
   return (
@@ -67,9 +63,7 @@ export default async function RootLayout({
           <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 0 }}>
             <StateProvider>
               <TransitionProvider>
-                <Transition key={ssrPathname ?? ''}>
-                  <Layout theme={theme}>{children}</Layout>
-                </Transition>
+                <Layout theme={theme}>{children}</Layout>
               </TransitionProvider>
             </StateProvider>
           </CookiesNextProvider>

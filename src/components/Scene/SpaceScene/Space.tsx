@@ -1,35 +1,34 @@
 'use client';
 
-import { FC } from 'react';
+import { useMemo, useRef } from 'react';
 import { Instances } from '@react-three/drei';
-import { PointsMaterial, SphereGeometry } from 'three';
+import { InstancedMesh, PointsMaterial, SphereGeometry } from 'three';
 
 import { Star } from './Star';
 
-import { ConfigProps } from '@/types/scene';
+const INSTANCE_LIMIT = 1000;
 
-type SpaceProps = {
-  configProps: ConfigProps;
-};
+// hoist these outside — they never change
+const sphereGeo = new SphereGeometry(0.1, 16, 16);
+const defaultMat = new PointsMaterial({ color: 'white' });
 
-export const Space: FC<SpaceProps> = ({ configProps }) => {
+export const Space = () => {
+  const instancesRef = useRef<InstancedMesh>(null);
+
+  // build the array once, not on every render
+  const stars = useMemo(
+    () => Array.from({ length: INSTANCE_LIMIT }, (_, i) => <Star key={i} />),
+    [],
+  );
+
   return (
-    <>
-      <Instances
-        limit={1000}
-        // range={1000}
-        geometry={new SphereGeometry(0.1, 16, 16)}
-        material={new PointsMaterial({ color: 'white' })}
-      >
-        {Array.from(
-          {
-            length: 1000,
-          },
-          (_, i) => (
-            <Star key={i} configProps={configProps} idx={i} />
-          ),
-        )}
-      </Instances>
-    </>
+    <Instances
+      ref={instancesRef}
+      limit={INSTANCE_LIMIT}
+      geometry={sphereGeo}
+      material={defaultMat}
+    >
+      {stars}
+    </Instances>
   );
 };

@@ -1,55 +1,49 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { LandingPage } from '@/components/LandingPage';
-import { INITIAL_SPACE_CONFIG_PROPS, SpaceScene } from '@/components/Scene';
+import { ScrollSection } from '@/components/sections/ScrollSection';
+import { useStateContext } from '@/providers/StateProvider';
 import { useTransitionContext } from '@/providers/TransitionProvider';
-import { ConfigProps } from '@/types/scene';
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home() {
   const container = useRef<HTMLDivElement>(null);
-  const { timeline } = useTransitionContext();
+  // const curtainRef = useRef<HTMLDivElement>(null);
 
-  const [configProps, setConfigProps] = useState<ConfigProps>(INITIAL_SPACE_CONFIG_PROPS);
+  const { timeline } = useTransitionContext();
+  const { state } = useStateContext();
+
+  const { ref } = state;
+  const { spaceConfigRef } = ref;
 
   useGSAP(
     () => {
-      gsap
-        .fromTo(
-          container.current,
-          { opacity: 0, duration: 2, backgroundColor: 'red' },
-          { opacity: 1, duration: 2, stagger: 0.1, backgroundColor: 'transparent' },
-        )
-        .then(() => {
-          setTimeout(() => {
-            setConfigProps({
-              configValue: {
-                ['position.z']: 1,
-                ['scale.z']: 0.5,
-              },
-              mode: 'start',
-            });
+      gsap.to(container.current, { opacity: 1, duration: 2 }).then(() => {
+        spaceConfigRef.current = {
+          configValue: {
+            ['position.z']: 1,
+            ['scale.z']: 0.5,
+          },
+          mode: 'start',
+        };
 
-            setTimeout(() => {
-              setConfigProps({
-                configValue: {
-                  ['position.z']: 1,
-                  ['scale.z']: 0.5,
-                },
-                mode: 'idle',
-              });
-            }, 5000);
-          }, 1000);
-        });
+        setTimeout(() => {
+          spaceConfigRef.current = {
+            configValue: {
+              ['position.z']: 1,
+              ['scale.z']: 0.5,
+            },
+            mode: 'idle',
+          };
+        }, 2500);
+      });
 
-      timeline.add(
-        gsap.to(container.current, { opacity: 0, duration: 2, backgroundColor: 'red' }),
-      );
+      timeline.add(gsap.to(container.current, { opacity: 0, duration: 2 }));
     },
     {
       scope: container,
@@ -57,10 +51,15 @@ export default function Home() {
   );
 
   return (
-    <div ref={container} className='h-dvh w-dvw'>
-      <SpaceScene configProps={configProps}>
-        <LandingPage />
-      </SpaceScene>
+    <div ref={container} className='relative h-dvh w-dvw opacity-0'>
+      {/* <div
+        ref={curtainRef}
+        className={cn('absolute z-2 h-dvh w-dvw', themeBg)}
+        id='curtain'
+      /> */}
+      {/* <TextTransitionScene /> */}
+
+      <ScrollSection />
     </div>
   );
 }

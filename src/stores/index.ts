@@ -1,4 +1,6 @@
+import { refAction } from './actions/refAction';
 import { themeAction } from './actions/themeAction';
+import { refInitialState, refReducer } from './reducers/refReducer';
 import { themeInitialState, themeReducer } from './reducers/themeReducer';
 
 import { TRootReducer, TRootState } from '@/types/reducer-context';
@@ -17,13 +19,16 @@ const combineReducers =
     );
 
 export const initialState = {
+  ref: refInitialState,
   theme: themeInitialState,
 };
 
 export const rootActions = {
+  ref: refAction,
   theme: themeAction,
 };
 
 export const store = combineReducers({
+  ref: refReducer,
   theme: themeReducer,
 });

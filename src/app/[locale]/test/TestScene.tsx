@@ -28,7 +28,7 @@ import {
 
 import { themeBgReverse, themeSubHeader } from '@/const/tailwindClass';
 import { useStateContext } from '@/providers/StateProvider';
-import { themeInitialState, themeReducer } from '@/stores/reducers/themeReducer';
+import { REF_ACTION } from '@/stores/reducers/refReducer';
 import { cn } from '@/utils/className';
 
 type PlanetProps = {
@@ -173,19 +173,22 @@ type ConfigProps = {
   mode: 'start' | 'cleaning' | 'stop' | 'idle';
 };
 
-type StarProps = {
-  configProps: ConfigProps;
-  idx: number;
-};
-const Star: FC<StarProps> = ({ configProps, idx }) => {
+const Star = () => {
+  const { state } = useStateContext();
+
+  const { ref } = state;
+  const { spaceConfigRef } = ref;
+
   const starRef = useRef<Mesh>(null);
-  const zDiffPosRef = useRef<number>(configProps.configValue['position.z']);
-  const zDiffScaleRef = useRef<number>(configProps.configValue['scale.z']);
+  const zDiffPosRef = useRef<number>(1);
+  const zDiffScaleRef = useRef<number>(0.5);
 
   useEffect(() => {
-    zDiffPosRef.current = configProps.configValue['position.z'];
-    zDiffScaleRef.current = configProps.configValue['scale.z'];
-  }, [configProps.configValue]);
+    if (spaceConfigRef.current) {
+      zDiffPosRef.current = spaceConfigRef.current.configValue['position.z'];
+      zDiffScaleRef.current = spaceConfigRef.current.configValue['scale.z'];
+    }
+  }, [spaceConfigRef]);
 
   const defaultPositionX = MathUtils.randFloatSpread(100);
   const defaultPositionY = MathUtils.randFloatSpread(100);
@@ -198,8 +201,8 @@ const Star: FC<StarProps> = ({ configProps, idx }) => {
   };
 
   useFrame(() => {
-    if (starRef.current) {
-      if (configProps.mode === 'idle') {
+    if (starRef.current && spaceConfigRef.current) {
+      if (spaceConfigRef.current.mode === 'idle') {
         starRef.current.position.z += 0.1;
       }
 
@@ -219,14 +222,15 @@ const Star: FC<StarProps> = ({ configProps, idx }) => {
         starRef.current.scale.set(1, 1, 1);
       }
 
-      if (configProps.mode === 'start') {
-        starRef.current.scale.z += configProps.configValue['scale.z'];
+      if (spaceConfigRef.current.mode === 'start') {
+        starRef.current.scale.z += spaceConfigRef.current.configValue['scale.z'];
 
         starRef.current.position.z += 0;
         setTimeout(() => {
-          starRef.current!.position.z += configProps.configValue['position.z'];
+          starRef.current!.position.z +=
+            spaceConfigRef.current!.configValue['position.z'];
         }, 1000);
-      } else if (configProps.mode === 'cleaning') {
+      } else if (spaceConfigRef.current.mode === 'cleaning') {
         while (zDiffPosRef.current > 0.1) {
           starRef.current.position.z += zDiffPosRef.current;
           zDiffPosRef.current -= 0.1;
@@ -238,7 +242,7 @@ const Star: FC<StarProps> = ({ configProps, idx }) => {
         }
 
         // starRef.current.position.z += 0.1;
-      } else if (configProps.mode === 'stop') {
+      } else if (spaceConfigRef.current.mode === 'stop') {
         starRef.current.position.z += 0;
       }
     }
@@ -269,10 +273,7 @@ const Star: FC<StarProps> = ({ configProps, idx }) => {
   );
 };
 
-type SpaceProps = {
-  configProps: ConfigProps;
-};
-const Space: FC<SpaceProps> = ({ configProps }) => {
+const Space = () => {
   const progress = useProgress();
 
   console.log({
@@ -294,7 +295,7 @@ const Space: FC<SpaceProps> = ({ configProps }) => {
             length: 1000,
           },
           (_, i) => (
-            <Star key={i} configProps={configProps} idx={i} />
+            <Star key={i} />
           ),
         )}
       </Instances>
@@ -326,6 +327,12 @@ const Light = () => {
 
 export const TestScene = () => {
   const scene = useMemo(() => new Scene(), []);
+  const { state } = useStateContext();
+  const { ref } = state;
+  const { spaceConfigRef } = ref;
+
+  // const { ref } = state;
+  // const { spaceConfigRef } = ref;
 
   const [configProps, setConfigProps] = useState<ConfigProps>({
     configValue: {
@@ -347,54 +354,44 @@ export const TestScene = () => {
             'rounded-md px-3 py-1 text-sm font-semibold hover:cursor-pointer',
           )}
           onMouseOver={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'start',
-            });
+            };
           }}
           onMouseLeave={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'cleaning',
-            });
+            };
 
             setTimeout(() => {
               setIsFinishJump(true);
             }, 800);
-
-            // setTimeout(() => {
-            //   setConfigProps({
-            //     configValue: {
-            //       ['position.z']: 1,
-            //       ['scale.z']: 0.5,
-            //     },
-            //     mode: 'stop',
-            //   });
-            // }, 2000);
           }}
           onTouchStart={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'start',
-            });
+            };
           }}
           onTouchEnd={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'cleaning',
-            });
+            };
           }}
         >
           Hola
@@ -406,13 +403,13 @@ export const TestScene = () => {
             'rounded-md px-3 py-1 text-sm font-semibold hover:cursor-pointer',
           )}
           onClick={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'idle',
-            });
+            };
 
             setIsFinishJump(false);
           }}
@@ -426,13 +423,13 @@ export const TestScene = () => {
             'rounded-md px-3 py-1 text-sm font-semibold hover:cursor-pointer',
           )}
           onClick={() => {
-            setConfigProps({
+            spaceConfigRef.current = {
               configValue: {
                 ['position.z']: 1,
                 ['scale.z']: 0.5,
               },
               mode: 'stop',
-            });
+            };
 
             setIsFinishJump(false);
           }}
@@ -446,7 +443,7 @@ export const TestScene = () => {
         fallback={<div>Sorry no WebGL supported!</div>}
         scene={scene}
       >
-        <Space configProps={configProps} />
+        <Space />
         {isFinishJump && <Planet configProps={configProps} />}
 
         {/* <Light /> */}
