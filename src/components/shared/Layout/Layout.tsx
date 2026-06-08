@@ -6,7 +6,9 @@ import { gsap } from 'gsap';
 import * as THREE from 'three';
 
 import { LiquidGlass } from '../LiquidGlass';
-import { SceneLoaderWrapper } from '../Loader/SceneLoaderWrapper';
+import { LoaderProvider } from '../Loader';
+import { FPSMonitor } from './FpsMonitor';
+import { ScrollHandler } from './ScrollHandler';
 
 import { DarkModeCTA } from '@/components/CTA';
 import { Footer } from '@/components/Footer';
@@ -64,7 +66,53 @@ export const Layout: FC<LayoutProps> = ({ children, theme }) => {
     <>
       <Transition id={pathname}>
         <HyperspaceWrapper>
-          <SceneLoaderWrapper>
+          {/* <div
+              ref={curtainRef}
+              // className={cn('absolute z-100 h-dvh w-dvw opacity-0')}
+              id='curtain'
+            >
+              <TextTransitionScene />
+              <NavBar />
+              <div className='h-dvh w-dvw'>{children}</div>
+              <DarkModeCTA ssrTheme={theme} />
+              <Footer />
+            </div>
+
+            <div className='fixed top-0 left-0 h-dvh w-dvw'>
+              <LiquidGlass>
+                <Suspense fallback={null}>
+                  <BaseCanvas
+                  // camera={{ position: [0, 0, 42], fov: 50, near: 0.1, far: 500 }}
+                  // gl={{
+                  //   alpha: true,
+                  //   antialias: true,
+                  //   premultipliedAlpha: false,
+                  //   toneMapping: THREE.ACESFilmicToneMapping,
+                  //   toneMappingExposure: 1.4,
+                  // }}
+                  // dpr={[1, 2]}
+                  // style={{
+                  //   zIndex: 10,
+                  // }}
+                  >
+                    <ButterflyNebulaScene />
+                    <PlanetSwarmScene />
+                    <StarFields />
+                  </BaseCanvas>
+                  <FPSMonitor />
+                </Suspense>
+              </LiquidGlass>
+            </div> */}
+          <LoaderProvider
+            scene={
+              <>
+                {/* <ButterflyNebulaScene />
+                <StarFields /> */}
+              </>
+            }
+            holdMs={2000}
+            // holdMs={3000}
+          >
             <div
               ref={curtainRef}
               // className={cn('absolute z-100 h-dvh w-dvw opacity-0')}
@@ -76,35 +124,9 @@ export const Layout: FC<LayoutProps> = ({ children, theme }) => {
               <DarkModeCTA ssrTheme={theme} />
               <Footer />
             </div>
-
-            <div className='fixed top-0 left-0 h-dvh w-dvw'>
-              <LiquidGlass>
-                <Suspense fallback={null}>
-                  <BaseCanvas
-                    camera={{ position: [0, 0, 42], fov: 50, near: 0.1, far: 500 }}
-                    gl={{
-                      alpha: true,
-                      antialias: true,
-                      premultipliedAlpha: false,
-                      toneMapping: THREE.ACESFilmicToneMapping,
-                      toneMappingExposure: 1.4,
-                    }}
-                    dpr={[1, 2]}
-                    style={{
-                      zIndex: 10,
-                    }}
-                  >
-                    {/* <SpaceScene /> */}
-                    {/* <HyperSpace /> */}
-                    <ButterflyNebulaScene />
-                    {/* <PlanetSwarmScene /> */}
-                    {/* <TransitionScene /> */}
-                    <StarFields />
-                  </BaseCanvas>
-                </Suspense>
-              </LiquidGlass>
-            </div>
-          </SceneLoaderWrapper>
+            <FPSMonitor />
+            <ScrollHandler />
+          </LoaderProvider>
         </HyperspaceWrapper>
       </Transition>
     </>

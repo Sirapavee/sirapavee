@@ -1,1 +1,1 @@
-export * from './SceneLoader';
+export * from './GlobalLoader';

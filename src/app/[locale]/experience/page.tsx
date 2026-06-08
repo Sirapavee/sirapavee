@@ -5,6 +5,8 @@ import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 
+import LiquidGlassV3 from './test';
+
 import { BlackHoleScene } from '@/components/Scene/BlackHoleScene';
 import SpiralPlanet from '@/components/Scene/SpiralFlyByPlanetScene/SpiralFlyByPlanetScene';
 import { themeHeader } from '@/const/tailwindClass';
@@ -52,7 +54,8 @@ export default function ExperiencePage() {
     //   <span className={cn('typo-headline-1', themeHeader)}>Experience Page</span>
     // </div>
     // <SpiralPlanet />
-    <BlackHoleScene />
+    // <BlackHoleScene />
+    <LiquidGlassV3 />
 
     // <Starfield
     //   ref={probeRef}

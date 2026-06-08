@@ -2,8 +2,6 @@ import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { type RootState, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-import { useProcedural } from '@/hooks/useProcedural';
-
 /* ─────────────────────────────────────────────────────────────────────────────
  *  Types
  * ──────────────────────────────────────────────────────────────────────────── */
@@ -509,30 +507,6 @@ function StarField({ scrollState, bp, reducedMotion, visible }: StarFieldProps) 
     // when stars themselves are stationary.
     mat.uniforms.uTime.value = now;
   });
-
-  // useEffect(() => {
-  //   useProcedural.preload<THREE.BufferGeometry>(
-  //     'star-geo',
-  //     () => {
-  //       const g = new THREE.PlaneGeometry(1, 1);
-  //       return g;
-  //     },
-  //     1500,
-  //   );
-  // }, []);
-
-  // const geo = useProcedural<THREE.BufferGeometry>(
-  //   'star-geo',
-  //   () => {
-  //     console.log('asdknj');
-
-  //     const g = new THREE.PlaneGeometry(1, 1);
-  //     return g;
-  //   },
-  //   1500,
-  // );
-
-  console.log('fire');
 
   return (
     <instancedMesh
