@@ -12,6 +12,7 @@ import { ScrollHandler } from './ScrollHandler';
 
 import { DarkModeCTA } from '@/components/CTA';
 import { Footer } from '@/components/Footer';
+import { IntroCrawlText } from '@/components/IntroCrawlText';
 import { NavBar } from '@/components/NavBar';
 import { SpaceScene } from '@/components/Scene';
 import { BaseCanvas } from '@/components/Scene/BaseCanvas/BaseCanvas';
@@ -120,6 +121,7 @@ export const Layout: FC<LayoutProps> = ({ children, theme }) => {
             >
               {/* <TextTransitionScene /> */}
               <NavBar />
+              <IntroCrawlText />
               <div className='h-dvh w-dvw'>{children}</div>
               <DarkModeCTA ssrTheme={theme} />
               <Footer />

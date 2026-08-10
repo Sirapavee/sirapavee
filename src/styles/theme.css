@@ -42,4 +42,17 @@
   --color-light-red-100: #ef4565;
 
   --color-light-green-100: #00ebc7;
+
+  @keyframes starwars-crawl {
+    0% {
+      top: 1200px;
+      transform: rotateX(20deg) translateZ(0);
+    }
+    100% {
+      top: -4000px;
+      transform: rotateX(20deg) translateZ(-2000px);
+    }
+  }
+
+  --animate-starwars: starwars-crawl 85s linear infinite;
 }
